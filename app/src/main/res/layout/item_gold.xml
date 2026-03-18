@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="6dp">
+
+    <!-- Tên vàng -->
+    <TextView
+        android:id="@+id/txtType"
+        android:layout_width="0dp"
+        android:layout_weight="1.3"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#000"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+
+    <!-- Giá mua -->
+    <TextView
+        android:id="@+id/txtBuy"
+        android:layout_width="0dp"
+        android:layout_weight="1.4"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="#2E86C1"
+        android:gravity="center"
+        android:maxLines="2"/>
+
+    <!-- Giá bán -->
+    <TextView
+        android:id="@+id/txtSell"
+        android:layout_width="0dp"
+        android:layout_weight="1.4"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="#E67E22"
+        android:gravity="center"
+        android:maxLines="2"/>
+
+    <!-- Ghi chú -->
+    <TextView
+        android:id="@+id/txtNote"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BaiTapQuaTrinh_BT1" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+    <style name="CustomSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">@drawable/bg_spinner_dropdown</item>
+    </style>
+    <style name="Theme.BaiTapQuaTrinh_BT1" parent="Base.Theme.BaiTapQuaTrinh_BT1" />
+</resources>
