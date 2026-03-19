@@ -1,10 +1,14 @@
-package com.example.baitapquatrinh_bt1;
+package com.example.baitapquatrinh_bt1.ui.activity;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.baitapquatrinh_bt1.R;
+import com.example.baitapquatrinh_bt1.ui.fragment.ChartFragment;
+import com.example.baitapquatrinh_bt1.ui.fragment.ConvertFragment;
+import com.example.baitapquatrinh_bt1.ui.fragment.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

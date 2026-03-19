@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh_bt1;
+package com.example.baitapquatrinh_bt1.ui.fragment;
 
 import android.os.Bundle;
 
@@ -8,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.example.baitapquatrinh_bt1.network.ApiService;
+import com.example.baitapquatrinh_bt1.model.Gold;
+import com.example.baitapquatrinh_bt1.ui.adapter.GoldAdapter;
+import com.example.baitapquatrinh_bt1.model.GoldResponse;
+import com.example.baitapquatrinh_bt1.R;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -99,7 +105,7 @@ public class HomeFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        GoldApiService api = retrofit.create(GoldApiService.class);
+        ApiService api = retrofit.create(ApiService.class);
 
         api.getGoldPrices().enqueue(new Callback<GoldResponse>() {
             @Override

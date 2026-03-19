@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BaiTapQuaTrinh_BT1">
         <activity
-            android:name=".HomeFragment"
+            android:name=".ui.fragment.HomeFragment"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

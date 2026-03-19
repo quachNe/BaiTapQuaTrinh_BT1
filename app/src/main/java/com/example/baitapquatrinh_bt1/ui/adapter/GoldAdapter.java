@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh_bt1;
+package com.example.baitapquatrinh_bt1.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.baitapquatrinh_bt1.model.Gold;
+import com.example.baitapquatrinh_bt1.R;
 
 import java.util.List;
 

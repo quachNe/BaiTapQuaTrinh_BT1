@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh_bt1;
+package com.example.baitapquatrinh_bt1.model;
 
 import java.util.Map;
 
