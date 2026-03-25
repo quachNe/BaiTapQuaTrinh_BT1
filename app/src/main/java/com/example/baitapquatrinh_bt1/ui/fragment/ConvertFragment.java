@@ -15,13 +15,12 @@ import android.widget.*;
 import com.example.baitapquatrinh_bt1.R;
 import com.example.baitapquatrinh_bt1.database.DatabaseHelper;
 import com.example.baitapquatrinh_bt1.model.GoldResponse;
+import com.example.baitapquatrinh_bt1.model.History;
 import com.example.baitapquatrinh_bt1.network.ApiService;
 import com.example.baitapquatrinh_bt1.network.RetrofitClient;
+import com.example.baitapquatrinh_bt1.ui.adapter.HistoryAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,19 +30,18 @@ public class ConvertFragment extends Fragment {
 
     private Spinner spinnerGoldType;
     private Spinner spinnerUnit;
-    private EditText edtAmount;
+    private EditText edtAmount, edtPrice;
     private TextView txtResult;
     private ListView listHistory;
-    private Button btnClearHistory;
+    private Button btnClearHistory, btnConvert, btnReset;
 
     private GoldResponse goldData;
+    private DatabaseHelper db;
 
     private ArrayAdapter<String> adapter;
-    private DatabaseHelper db;
 
     private Map<String, String> nameToKeyMap = new HashMap<>();
 
-    // 👉 lưu result để tránh parse text lỗi
     private double lastResult = 0;
 
     @Override
@@ -52,12 +50,18 @@ public class ConvertFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_convert, container, false);
 
+        // Ánh xạ view
         spinnerGoldType = view.findViewById(R.id.spinnerGoldType);
         spinnerUnit = view.findViewById(R.id.spinnerUnit);
         edtAmount = view.findViewById(R.id.edtAmount);
+        edtPrice = view.findViewById(R.id.edtPrice);
         txtResult = view.findViewById(R.id.txtResult);
         listHistory = view.findViewById(R.id.listHistory);
         btnClearHistory = view.findViewById(R.id.btnClearHistory);
+
+        edtPrice.setEnabled(false);
+        btnConvert = view.findViewById(R.id.btnConvert);
+        btnReset = view.findViewById(R.id.btnReset);
 
         db = new DatabaseHelper(getContext());
 
@@ -66,7 +70,7 @@ public class ConvertFragment extends Fragment {
         setupListener();
         loadHistory();
 
-        // 👉 Nút XÓA LỊCH SỬ
+        // Xóa lịch sử
         btnClearHistory.setOnClickListener(v -> {
             new android.app.AlertDialog.Builder(getContext())
                     .setTitle("Xóa lịch sử")
@@ -79,39 +83,45 @@ public class ConvertFragment extends Fragment {
                     .setNegativeButton("Hủy", null)
                     .show();
         });
+        btnConvert.setOnClickListener(v -> {
 
-        // 👉 ENTER để lưu (KHÔNG dùng isHandled nữa)
-        edtAmount.setOnEditorActionListener((v, actionId, event) -> {
+            String input = edtAmount.getText().toString();
 
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                calculate();
-
-                String input = edtAmount.getText().toString();
-                if (!input.isEmpty()) {
-
-                    double amount = Double.parseDouble(input);
-                    String name = spinnerGoldType.getSelectedItem().toString();
-                    String unit = spinnerUnit.getSelectedItem().toString();
-
-                    db.insertHistory(name, amount, unit, lastResult);
-
-                    loadHistory();
-                }
-
-                // 👉 reset để nhập tiếp
-                edtAmount.setText("");
-                edtAmount.requestFocus();
-
-                return true;
+            if (input.isEmpty()) {
+                Toast.makeText(getContext(), "Nhập số lượng", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            return false;
+            // tính toán
+            calculate();
+
+            double amount = Double.parseDouble(input);
+            String name = spinnerGoldType.getSelectedItem().toString();
+            String unit = spinnerUnit.getSelectedItem().toString();
+
+            // lưu DB
+            db.insertHistory(name, amount, unit, lastResult);
+
+            // reload list
+            loadHistory();
+
+            Toast.makeText(getContext(), "Đã chuyển đổi & lưu", Toast.LENGTH_SHORT).show();
         });
 
+        btnReset.setOnClickListener(v -> {
+            edtAmount.setText("");
+            txtResult.setText("0 VND");
+            edtAmount.requestFocus();
+        });
+
+        listHistory.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
         return view;
     }
 
+    // ========================= SPINNER =========================
     private void setupSpinner() {
         String[] units = {"Lượng", "Chỉ", "Phân"};
 
@@ -120,12 +130,12 @@ public class ConvertFragment extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item,
                 units
         );
+
         spinnerUnit.setAdapter(adapterUnit);
     }
 
+    // ========================= LOAD API =========================
     private void loadData() {
-        Log.d("API", "Calling API...");
-
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         apiService.getGoldPrices().enqueue(new Callback<GoldResponse>() {
@@ -136,59 +146,45 @@ public class ConvertFragment extends Fragment {
 
                     goldData = response.body();
 
-                    if (goldData.prices != null) {
+                    List<String> nameList = new ArrayList<>();
+                    nameToKeyMap.clear();
 
-                        List<String> nameList = new ArrayList<>();
-                        nameToKeyMap.clear();
+                    for (String key : goldData.prices.keySet()) {
+                        GoldResponse.GoldItem item = goldData.prices.get(key);
+                        if (!item.currency.equals("VND")) continue;
+                        if (item != null) {
+                            String name = item.name;
 
-                        for (String key : goldData.prices.keySet()) {
-                            GoldResponse.GoldItem item = goldData.prices.get(key);
-
-                            if (item != null) {
-                                String name = item.name;
-
-                                nameList.add(name);
-                                nameToKeyMap.put(name, key);
-                            }
+                            nameList.add(name);
+                            nameToKeyMap.put(name, key);
                         }
-
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                                getContext(),
-                                android.R.layout.simple_spinner_dropdown_item,
-                                nameList
-                        );
-
-                        spinnerGoldType.setAdapter(adapter);
                     }
 
-                } else {
-                    Log.d("API", "Response fail");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            getContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            nameList
+                    );
+
+                    spinnerGoldType.setAdapter(adapter);
+
+                    updatePrice(); // 👉 set giá lần đầu
                 }
             }
 
             @Override
             public void onFailure(Call<GoldResponse> call, Throwable t) {
-                Log.e("API", "ERROR: " + t.getMessage());
                 Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // ========================= LISTENER =========================
     private void setupListener() {
-
-        edtAmount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                calculate();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        });
-
         spinnerGoldType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updatePrice();
                 calculate();
             }
 
@@ -199,6 +195,7 @@ public class ConvertFragment extends Fragment {
         spinnerUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updatePrice();
                 calculate();
             }
 
@@ -207,45 +204,52 @@ public class ConvertFragment extends Fragment {
         });
     }
 
-    private void calculate() {
+    // ========================= UPDATE PRICE =========================
+    private void updatePrice() {
         if (goldData == null) return;
-
-        String input = edtAmount.getText().toString();
-        if (input.isEmpty()) return;
-
-        double amount = Double.parseDouble(input);
 
         String name = spinnerGoldType.getSelectedItem().toString();
         String key = nameToKeyMap.get(name);
         if (key == null) return;
 
-        double price = goldData.getSellPrice(key);
+        double priceLuong = goldData.getSellPrice(key);
 
         String unit = spinnerUnit.getSelectedItem().toString();
 
-        double multiplier = 1;
+        double finalPrice = priceLuong;
 
         if (unit.equals("Chỉ")) {
-            multiplier = 0.1;
+            finalPrice = priceLuong / 10;
         } else if (unit.equals("Phân")) {
-            multiplier = 0.01;
+            finalPrice = priceLuong / 100;
         }
-        double result = amount * price * multiplier;
 
-        lastResult = result; // 👉 lưu lại để insert
+        edtPrice.setText(String.format("%,.0f", finalPrice));
+    }
+
+    // ========================= CALCULATE =========================
+    private void calculate() {
+
+        String amountStr = edtAmount.getText().toString();
+        String priceStr = edtPrice.getText().toString().replace(",", "");
+
+        if (amountStr.isEmpty() || priceStr.isEmpty()) return;
+
+        double amount = Double.parseDouble(amountStr);
+        double price = Double.parseDouble(priceStr);
+
+        double result = amount * price;
+
+        lastResult = result;
 
         txtResult.setText(String.format("%,.0f VND", result));
     }
 
+    // ========================= HISTORY =========================
     private void loadHistory() {
-        List<String> historyList = db.getHistory();
+        List<History> historyList = db.getHistory();
 
-        adapter = new ArrayAdapter<>(
-                getContext(),
-                android.R.layout.simple_list_item_1,
-                historyList
-        );
-
+        HistoryAdapter adapter = new HistoryAdapter(getContext(), historyList);
         listHistory.setAdapter(adapter);
     }
 }

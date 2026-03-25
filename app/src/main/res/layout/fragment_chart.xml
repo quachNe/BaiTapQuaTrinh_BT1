@@ -29,22 +29,35 @@
             android:gravity="center"
             android:text="(Trong 7 ngày qua)"
             android:layout_marginBottom="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerFilter"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_spinner"
-            android:paddingEnd="30dp"
-            style="@style/CustomSpinner"
-            android:layout_marginBottom="10dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
 
-        <!-- LINE CHART -->
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <Spinner
+                    android:id="@+id/spinnerFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_spinner"
+                    android:paddingEnd="30dp"
+                    style="@style/CustomSpinner"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- LINE CHART -->
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="600dp"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
     </LinearLayout>
 </LinearLayout>

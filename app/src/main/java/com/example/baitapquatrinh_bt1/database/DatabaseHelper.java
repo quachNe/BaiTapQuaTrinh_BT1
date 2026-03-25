@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.baitapquatrinh_bt1.model.History;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,25 +70,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // =========================
     // GET DATA
     // =========================
-    public List<String> getHistory() {
-        List<String> list = new ArrayList<>();
+    public List<History> getHistory() {
+
+        List<History> list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY id DESC", null);
 
         if (cursor.moveToFirst()) {
             do {
-                String date = cursor.getString(5);
+                int id = cursor.getInt(0);
                 String goldType = cursor.getString(1);
                 double amount = cursor.getDouble(2);
                 String unit = cursor.getString(3);
                 double result = cursor.getDouble(4);
+                String date = cursor.getString(5);
 
-                String item = date + " - " + goldType + " - " +
-                        amount + " " + unit + " → " +
-                        String.format("%,.0f", result);
-
-                list.add(item);
+                list.add(new History(id, date, goldType, amount, unit, result));
 
             } while (cursor.moveToNext());
         }
