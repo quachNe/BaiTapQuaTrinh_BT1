@@ -14,5 +14,4 @@
         android:id="@+id/nav_chart"
         android:title="Chart"
         android:icon="@drawable/ic_chart"/>
-
 </menu>

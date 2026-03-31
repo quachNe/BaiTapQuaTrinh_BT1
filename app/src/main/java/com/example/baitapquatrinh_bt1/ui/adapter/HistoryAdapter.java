@@ -22,7 +22,7 @@ public class HistoryAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        TextView txtIndex, txtTime, txtName, txtUnit, txtResult;
+        TextView txtIndex, txtTime, txtName, txtUnit, txtResult, txtQuanty;
     }
 
     @Override
@@ -53,6 +53,7 @@ public class HistoryAdapter extends BaseAdapter {
             holder.txtIndex = view.findViewById(R.id.txtIndex);
             holder.txtTime = view.findViewById(R.id.txtTime);
             holder.txtName = view.findViewById(R.id.txtName);
+            holder.txtQuanty = view.findViewById(R.id.txtQuanty);
             holder.txtUnit = view.findViewById(R.id.txtUnit);
             holder.txtResult = view.findViewById(R.id.txtResult);
 
@@ -66,6 +67,7 @@ public class HistoryAdapter extends BaseAdapter {
         holder.txtIndex.setText(String.valueOf(i + 1));
         holder.txtTime.setText(item.date);
         holder.txtName.setText(item.goldType);
+        holder.txtQuanty.setText(item.amount + "");
         holder.txtUnit.setText(item.unit);
         holder.txtResult.setText(
                 String.format(new java.util.Locale("vi", "VN"), "%,.0f VND", item.result)

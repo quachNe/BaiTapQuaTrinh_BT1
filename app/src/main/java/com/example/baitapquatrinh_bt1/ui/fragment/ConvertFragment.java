@@ -83,6 +83,7 @@ public class ConvertFragment extends Fragment {
                     .setNegativeButton("Hủy", null)
                     .show();
         });
+
         btnConvert.setOnClickListener(v -> {
 
             String input = edtAmount.getText().toString();
@@ -104,6 +105,9 @@ public class ConvertFragment extends Fragment {
 
             // reload list
             loadHistory();
+            edtAmount.setText("");
+            txtResult.setText("0 VND");
+            edtAmount.requestFocus();
 
             Toast.makeText(getContext(), "Đã chuyển đổi & lưu", Toast.LENGTH_SHORT).show();
         });
@@ -118,6 +122,7 @@ public class ConvertFragment extends Fragment {
             v.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
+
         return view;
     }
 
@@ -127,9 +132,11 @@ public class ConvertFragment extends Fragment {
 
         ArrayAdapter<String> adapterUnit = new ArrayAdapter<>(
                 getContext(),
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.item_spinner,
                 units
         );
+
+        adapterUnit.setDropDownViewResource(R.layout.item_spinner);
 
         spinnerUnit.setAdapter(adapterUnit);
     }
@@ -162,13 +169,15 @@ public class ConvertFragment extends Fragment {
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             getContext(),
-                            android.R.layout.simple_spinner_dropdown_item,
+                            R.layout.item_spinner,
                             nameList
                     );
 
+                    adapter.setDropDownViewResource(R.layout.item_spinner);
+
                     spinnerGoldType.setAdapter(adapter);
 
-                    updatePrice(); // 👉 set giá lần đầu
+                    updatePrice();
                 }
             }
 

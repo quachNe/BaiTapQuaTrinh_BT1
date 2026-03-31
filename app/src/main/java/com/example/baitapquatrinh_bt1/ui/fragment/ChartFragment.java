@@ -38,7 +38,7 @@ public class ChartFragment extends Fragment {
     private String currentType = "SJL1L10";
 
     public ChartFragment() {}
-
+    LinearLayout loadingLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class ChartFragment extends Fragment {
 
         lineChart = view.findViewById(R.id.lineChart);
         spinner = view.findViewById(R.id.spinnerFilter);
+        loadingLayout = view.findViewById(R.id.loadingLayout);
 
         loadSpinner();
 
@@ -55,7 +56,7 @@ public class ChartFragment extends Fragment {
 
     // ================= SPINNER =================
     private void loadSpinner() {
-
+        loadingLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://giavang.now/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -99,18 +100,23 @@ public class ChartFragment extends Fragment {
                         public void onNothingSelected(AdapterView<?> parent) {}
                     });
                 }
+                loadingLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<GoldResponse> call, Throwable t) {
                 t.printStackTrace();
+
+                loadingLayout.setVisibility(View.GONE);
+
+                Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     // ================= LOAD CHART =================
     private void loadChart(String type) {
-
+        loadingLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://giavang.now/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -125,13 +131,19 @@ public class ChartFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     drawChart(response.body().history);
                 }
+                loadingLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<GoldHistoryResponse> call, Throwable t) {
                 t.printStackTrace();
+
+                loadingLayout.setVisibility(View.GONE);
+
+                Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     // ================= DRAW CHART =================

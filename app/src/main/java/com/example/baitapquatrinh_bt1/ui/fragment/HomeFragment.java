@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment {
 
     GoldAdapter adapter;
     ArrayAdapter<String> spinnerAdapter;
-
+    LinearLayout loadingLayout;
     public HomeFragment() {}
 
     @Override
@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment {
         listGold = view.findViewById(R.id.listGold);
         spinnerFilter = view.findViewById(R.id.spinnerFilter);
         txtDate = view.findViewById(R.id.txtDate);
+        loadingLayout = view.findViewById(R.id.loadingLayout);
 
         // Khởi tạo list
         goldList = new ArrayList<>();
@@ -99,7 +100,7 @@ public class HomeFragment extends Fragment {
 
     // ================= API =================
     private void fetchGoldPrice() {
-
+        loadingLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.vang.today/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -147,11 +148,13 @@ public class HomeFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     spinnerAdapter.notifyDataSetChanged();
                 }
+                loadingLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<GoldResponse> call, Throwable t) {
                 t.printStackTrace();
+                loadingLayout.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
