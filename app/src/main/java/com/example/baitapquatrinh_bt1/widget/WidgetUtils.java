@@ -21,19 +21,19 @@ public class WidgetUtils {
     private static final String PREF = "WIDGET_PREF";
     private static final String INDEX = "INDEX";
 
-    // 🔥 CACHE DATA (QUAN TRỌNG)
+    // CACHE DATA (QUAN TRỌNG)
     private static List<GoldResponse.GoldItem> cacheList = null;
 
     // ================= UPDATE =================
     public static void updateWidget(Context context) {
 
-        // 👉 Nếu đã có cache → không gọi API nữa
+        // Nếu đã có cache → không gọi API nữa
         if (cacheList != null && !cacheList.isEmpty()) {
             updateFromCache(context);
             return;
         }
 
-        // 👉 Chưa có → gọi API
+        // Chưa có → gọi API
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
 
         api.getGoldPrices().enqueue(new Callback<GoldResponse>() {
@@ -64,7 +64,7 @@ public class WidgetUtils {
                     // sort ổn định
                     Collections.sort(list, (a, b) -> a.name.compareTo(b.name));
 
-                    // 🔥 LƯU CACHE
+                    // LƯU CACHE
                     cacheList = list;
 
                     updateFromCache(context);
@@ -92,7 +92,7 @@ public class WidgetUtils {
 
         int index = getIndex(context);
 
-        // 🔥 FIX CHÍNH: KHÔNG reset về 0 nữa
+        // FIX CHÍNH: KHÔNG reset về 0 nữa
         index = index % cacheList.size();
         saveIndex(context, index);
 
@@ -180,14 +180,14 @@ public class WidgetUtils {
 
         Log.d("WIDGET", "Saved index: " + index);
 
-        // 🔥 KHÔNG gọi API nữa → dùng cache
+        // KHÔNG gọi API nữa → dùng cache
         updateFromCache(context);
     }
 
     // ================= RELOAD =================
     public static void reload(Context context) {
 
-        // 🔥 clear cache → gọi lại API
+        // clear cache → gọi lại API
         cacheList = null;
 
         updateWidget(context);
@@ -207,10 +207,6 @@ public class WidgetUtils {
     }
 
     // ================= FORMAT =================
-//    private static String format(double price) {
-//        return String.format(Locale.getDefault(), "%.1fM", price / 1_000_000);
-//    }
-
     private static  String format(double number) {
         double trieu = number / 1_000_000;
         return String.format("%.1f\ntriệu", trieu);

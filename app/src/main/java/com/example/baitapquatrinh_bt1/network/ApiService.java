@@ -8,9 +8,11 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ApiService {
+
     // Lấy danh sách giá vàng (trang home)
     @GET("api/prices")
     Call<GoldResponse> getGoldPrices();
+
     // Lấy thống kê 7 ngày qua (trang chart)
     @GET("api/prices")
     Call<GoldHistoryResponse> getGoldHistory(

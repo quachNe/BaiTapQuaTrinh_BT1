@@ -16,6 +16,7 @@ import com.example.baitapquatrinh_bt1.model.GoldResponse;
 import com.example.baitapquatrinh_bt1.model.GoldHistoryResponse;
 import com.example.baitapquatrinh_bt1.R;
 
+import com.example.baitapquatrinh_bt1.network.RetrofitClient;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.components.XAxis;
@@ -117,13 +118,9 @@ public class ChartFragment extends Fragment {
     // ================= LOAD CHART =================
     private void loadChart(String type) {
         loadingLayout.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://giavang.now/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService api = retrofit.create(ApiService.class);
-
+        // Lấy instance ApiService từ RetrofitClient
+        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        // Gọi API getGoldHistory với loại vàng 'type' và lấy dữ liệu 7 ngày gần nhất
         api.getGoldHistory(type, 7).enqueue(new Callback<GoldHistoryResponse>() {
             @Override
             public void onResponse(Call<GoldHistoryResponse> call, Response<GoldHistoryResponse> response) {
@@ -143,7 +140,6 @@ public class ChartFragment extends Fragment {
                 Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     // ================= DRAW CHART =================
@@ -224,8 +220,9 @@ public class ChartFragment extends Fragment {
 
         // ===== LEGEND =====
         lineChart.getLegend().setTextSize(13f);
-        lineChart.getLegend().setYOffset(20f); // 👈 margin top
+        lineChart.getLegend().setYOffset(20f);
         lineChart.getLegend().setXEntrySpace(20f);
+
         // ===== TẮT DESCRIPTION (vì đã có TextView) =====
         lineChart.getDescription().setEnabled(false);
 

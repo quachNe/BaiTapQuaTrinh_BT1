@@ -14,7 +14,7 @@ public class GoldResponse {
         public String currency;
     }
 
-    // 🔥 Lấy giá bán theo loại vàng (dùng cho Convert)
+    // Lấy giá bán theo loại vàng (dùng cho Convert)
     public double getSellPrice(String key) {
         if (prices == null) return 0;
 
@@ -26,7 +26,7 @@ public class GoldResponse {
         return 0;
     }
 
-    // 🔥 Lấy giá mua (nếu cần)
+    // Lấy giá mua (nếu cần)
     public double getBuyPrice(String key) {
         if (prices == null) return 0;
 

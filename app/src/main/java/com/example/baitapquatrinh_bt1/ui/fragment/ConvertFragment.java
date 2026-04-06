@@ -3,13 +3,9 @@ package com.example.baitapquatrinh_bt1.ui.fragment;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
 import com.example.baitapquatrinh_bt1.R;
@@ -20,6 +16,8 @@ import com.example.baitapquatrinh_bt1.network.ApiService;
 import com.example.baitapquatrinh_bt1.network.RetrofitClient;
 import com.example.baitapquatrinh_bt1.ui.adapter.HistoryAdapter;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 
 import retrofit2.Call;
@@ -38,11 +36,12 @@ public class ConvertFragment extends Fragment {
     private GoldResponse goldData;
     private DatabaseHelper db;
 
-    private ArrayAdapter<String> adapter;
-
     private Map<String, String> nameToKeyMap = new HashMap<>();
 
     private double lastResult = 0;
+
+    private DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+    private DecimalFormat formatter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,12 +57,16 @@ public class ConvertFragment extends Fragment {
         txtResult = view.findViewById(R.id.txtResult);
         listHistory = view.findViewById(R.id.listHistory);
         btnClearHistory = view.findViewById(R.id.btnClearHistory);
-
-        edtPrice.setEnabled(false);
         btnConvert = view.findViewById(R.id.btnConvert);
         btnReset = view.findViewById(R.id.btnReset);
 
+        edtPrice.setEnabled(false);
+
         db = new DatabaseHelper(getContext());
+
+        // Setup DecimalFormat
+        symbols.setGroupingSeparator('.');
+        formatter = new DecimalFormat("#,###", symbols);
 
         setupSpinner();
         loadData();
@@ -84,26 +87,24 @@ public class ConvertFragment extends Fragment {
                     .show();
         });
 
+        // Chuyển đổi
         btnConvert.setOnClickListener(v -> {
-
             String input = edtAmount.getText().toString();
-
             if (input.isEmpty()) {
-                Toast.makeText(getContext(), "Nhập số lượng", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Vui lòng nhập số lượng", Toast.LENGTH_SHORT).show();
+                edtAmount.requestFocus();
                 return;
             }
 
-            // tính toán
+            // Gọi hàm tính toán
             calculate();
 
             double amount = Double.parseDouble(input);
             String name = spinnerGoldType.getSelectedItem().toString();
             String unit = spinnerUnit.getSelectedItem().toString();
 
-            // lưu DB
             db.insertHistory(name, amount, unit, lastResult);
 
-            // reload list
             loadHistory();
             edtAmount.setText("");
             txtResult.setText("0 VND");
@@ -112,6 +113,7 @@ public class ConvertFragment extends Fragment {
             Toast.makeText(getContext(), "Đã chuyển đổi & lưu", Toast.LENGTH_SHORT).show();
         });
 
+        // Reset
         btnReset.setOnClickListener(v -> {
             edtAmount.setText("");
             txtResult.setText("0 VND");
@@ -137,7 +139,6 @@ public class ConvertFragment extends Fragment {
         );
 
         adapterUnit.setDropDownViewResource(R.layout.item_spinner);
-
         spinnerUnit.setAdapter(adapterUnit);
     }
 
@@ -148,7 +149,6 @@ public class ConvertFragment extends Fragment {
         apiService.getGoldPrices().enqueue(new Callback<GoldResponse>() {
             @Override
             public void onResponse(Call<GoldResponse> call, Response<GoldResponse> response) {
-
                 if (response.isSuccessful() && response.body() != null) {
 
                     goldData = response.body();
@@ -161,7 +161,6 @@ public class ConvertFragment extends Fragment {
                         if (!item.currency.equals("VND")) continue;
                         if (item != null) {
                             String name = item.name;
-
                             nameList.add(name);
                             nameToKeyMap.put(name, key);
                         }
@@ -174,7 +173,6 @@ public class ConvertFragment extends Fragment {
                     );
 
                     adapter.setDropDownViewResource(R.layout.item_spinner);
-
                     spinnerGoldType.setAdapter(adapter);
 
                     updatePrice();
@@ -222,9 +220,7 @@ public class ConvertFragment extends Fragment {
         if (key == null) return;
 
         double priceLuong = goldData.getSellPrice(key);
-
         String unit = spinnerUnit.getSelectedItem().toString();
-
         double finalPrice = priceLuong;
 
         if (unit.equals("Chỉ")) {
@@ -233,31 +229,28 @@ public class ConvertFragment extends Fragment {
             finalPrice = priceLuong / 100;
         }
 
-        edtPrice.setText(String.format("%,.0f", finalPrice));
+        edtPrice.setText(formatter.format(finalPrice));
     }
 
     // ========================= CALCULATE =========================
     private void calculate() {
-
         String amountStr = edtAmount.getText().toString();
-        String priceStr = edtPrice.getText().toString().replace(",", "");
+        String priceStr = edtPrice.getText().toString().replace(".", "");
 
         if (amountStr.isEmpty() || priceStr.isEmpty()) return;
 
         double amount = Double.parseDouble(amountStr);
         double price = Double.parseDouble(priceStr);
-
         double result = amount * price;
 
         lastResult = result;
 
-        txtResult.setText(String.format("%,.0f VND", result));
+        txtResult.setText(formatter.format(result) + " VND");
     }
 
     // ========================= HISTORY =========================
     private void loadHistory() {
         List<History> historyList = db.getHistory();
-
         HistoryAdapter adapter = new HistoryAdapter(getContext(), historyList);
         listHistory.setAdapter(adapter);
     }
