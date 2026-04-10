@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
-    android:background="@android:color/white"
+    android:background="#FFFFFF"
     android:layout_marginBottom="6dp">
 
     <!-- Tên vàng -->
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="14sp"
-        android:textColor="#000"
+        android:textColor="#1A237E"
         android:maxLines="2"
         android:ellipsize="end"/>
 
@@ -25,7 +25,9 @@
         android:layout_weight="1.4"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="#2E86C1"
+        android:textColor="#4CAF50"
+        android:textSize="14sp"
+        android:textStyle="bold"
         android:gravity="center"
         android:maxLines="2"/>
 
@@ -36,7 +38,9 @@
         android:layout_weight="1.4"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="#E67E22"
+        android:textColor="#FF5252"
+        android:textStyle="bold"
+        android:textSize="14sp"
         android:gravity="center"
         android:maxLines="2"/>
 
@@ -45,9 +49,10 @@
         android:id="@+id/txtNote"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:textSize="14sp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:gravity="center"
-        android:textStyle="bold"/>
-
+        android:textStyle="bold"
+        android:textColor="#6D4C41"/>
 </LinearLayout>

@@ -103,8 +103,8 @@ public class WidgetUtils {
 
         // ===== UI =====
         views.setTextViewText(R.id.txtName, item.name);
-        views.setTextViewText(R.id.txtBuy, "Mua:" + format(item.buy));
-        views.setTextViewText(R.id.txtSell,"Bán:" + format(item.sell));
+        views.setTextViewText(R.id.txtBuy, "Mua:\n" + format(item.buy));
+        views.setTextViewText(R.id.txtSell,"Bán:\n" + format(item.sell));
 
         // ===== TIME =====
         views.setTextViewText(R.id.txtTime, getTime());
@@ -218,9 +218,38 @@ public class WidgetUtils {
     }
 
     private static String getDate() {
-        return new SimpleDateFormat(
-                "EEEE, d, 'tháng' M",
-                new Locale("vi", "VN")
-        ).format(new Date());
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        String thu;
+
+        switch (dayOfWeek) {
+            case Calendar.MONDAY:
+                thu = "Thứ 2";
+                break;
+            case Calendar.TUESDAY:
+                thu = "Thứ 3";
+                break;
+            case Calendar.WEDNESDAY:
+                thu = "Thứ 4";
+                break;
+            case Calendar.THURSDAY:
+                thu = "Thứ 5";
+                break;
+            case Calendar.FRIDAY:
+                thu = "Thứ 6";
+                break;
+            case Calendar.SATURDAY:
+                thu = "Thứ 7";
+                break;
+            case Calendar.SUNDAY:
+                thu = "Chủ nhật";
+                break;
+            default:
+                thu = "";
+        }
+
+        String ngayThang = new SimpleDateFormat("d 'tháng' M", new Locale("vi", "VN"))
+                .format(new Date());
+
+        return thu + ", " + ngayThang;
     }
 }

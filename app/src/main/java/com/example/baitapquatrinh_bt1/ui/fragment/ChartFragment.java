@@ -58,14 +58,14 @@ public class ChartFragment extends Fragment {
     // ================= SPINNER =================
     private void loadSpinner() {
         loadingLayout.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://giavang.now/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService api = retrofit.create(ApiService.class);
-
-        api.getGoldPrices().enqueue(new Callback<GoldResponse>() {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://giavang.now/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        ApiService api = retrofit.create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+        apiService.getGoldPrices().enqueue(new Callback<GoldResponse>() {
             @Override
             public void onResponse(Call<GoldResponse> call, Response<GoldResponse> response) {
 

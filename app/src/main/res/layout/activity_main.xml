@@ -2,34 +2,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"> <!-- Nền tổng sáng hơn -->
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav"/>
+        android:layout_above="@id/bottomNav"
+        android:background="#FAFAFA" />  <!-- đồng bộ -->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        app:itemActiveIndicatorStyle="@null"
 
-        android:background="@drawable/bg_bottom"
-        android:elevation="10dp"
+        android:background="@drawable/bg_bottom_gold"
+    android:elevation="12dp"
 
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="8dp"
 
-        app:menu="@menu/menu_bottom"
-        app:labelVisibilityMode="unlabeled"
+    app:menu="@menu/menu_bottom"
+    app:labelVisibilityMode="unlabeled"
 
-        app:itemIconSize="20dp"
-        app:itemIconTint="@color/nav_icon_color"
-        app:itemTextColor="@color/nav_icon_color"
+    app:itemIconSize="26dp"
 
-        app:itemRippleColor="@android:color/transparent"
-        app:itemBackground="@android:color/transparent"/>
+    app:itemIconTint="@color/nav_gold_color"
+    app:itemTextColor="@color/nav_gold_color"
+
+    app:itemRippleColor="@android:color/transparent"
+    app:itemBackground="@android:color/transparent"
+    app:itemActiveIndicatorStyle="@null"/>
+
 </RelativeLayout>

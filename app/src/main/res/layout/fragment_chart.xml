@@ -2,33 +2,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="#FAFAFA">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:paddingTop="26dp">
 
+        <!-- TIÊU ĐỀ -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thống Kê Giá Vàng"
-            android:textSize="22sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#CFAE4F"
             android:gravity="center"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp"/>
 
+        <!-- NGÀY -->
         <TextView
             android:id="@+id/txtDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:text="Trong 7 ngày qua"
+            android:textSize="18sp"
             android:textColor="#666666"
             android:gravity="center"
-            android:text="(Trong 7 ngày qua)"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="12dp"/>
+
+        <!-- SCROLL NỘI DUNG -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -40,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- SPINNER -->
                 <Spinner
                     android:id="@+id/spinnerFilter"
                     android:layout_width="match_parent"
@@ -47,40 +54,44 @@
                     android:background="@drawable/bg_spinner"
                     android:paddingEnd="30dp"
                     style="@style/CustomSpinner"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <!-- LINE CHART -->
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
                     android:layout_width="match_parent"
                     android:layout_height="600dp"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="12dp"
+                    android:background="#FFFFFF"
+                    android:elevation="2dp"
+                    android:padding="10dp"/>
 
             </LinearLayout>
 
         </ScrollView>
     </LinearLayout>
 
-    <!-- Loading overlay -->
+    <!-- LOADING -->
     <LinearLayout
         android:id="@+id/loadingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"
+        android:background="#66000000"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ProgressBar
             android:layout_width="60dp"
-            android:layout_height="60dp"/>
+            android:layout_height="60dp"
+            android:indeterminateTint="#FBC02D" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đang tải dữ liệu..."
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="10dp"/>
-
+            android:textColor="#FBC02D"
+        android:layout_marginTop="12dp"/>
     </LinearLayout>
+
 </FrameLayout>

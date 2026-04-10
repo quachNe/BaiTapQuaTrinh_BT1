@@ -26,8 +26,7 @@ import retrofit2.Response;
 
 public class ConvertFragment extends Fragment {
 
-    private Spinner spinnerGoldType;
-    private Spinner spinnerUnit;
+    private Spinner spinnerGoldType, spinnerUnit;
     private EditText edtAmount, edtPrice;
     private TextView txtResult;
     private ListView listHistory;
@@ -106,9 +105,6 @@ public class ConvertFragment extends Fragment {
             db.insertHistory(name, amount, unit, lastResult);
 
             loadHistory();
-            edtAmount.setText("");
-            txtResult.setText("0 VND");
-            edtAmount.requestFocus();
 
             Toast.makeText(getContext(), "Đã chuyển đổi & lưu", Toast.LENGTH_SHORT).show();
         });
@@ -118,6 +114,8 @@ public class ConvertFragment extends Fragment {
             edtAmount.setText("");
             txtResult.setText("0 VND");
             edtAmount.requestFocus();
+            spinnerGoldType.setSelection(0);
+            spinnerUnit.setSelection(0);
         });
 
         listHistory.setOnTouchListener((v, event) -> {

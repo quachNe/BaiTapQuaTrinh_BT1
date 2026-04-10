@@ -11,6 +11,7 @@ import android.widget.*;
 
 import com.example.baitapquatrinh_bt1.network.ApiService;
 import com.example.baitapquatrinh_bt1.model.Gold;
+import com.example.baitapquatrinh_bt1.network.RetrofitClient;
 import com.example.baitapquatrinh_bt1.ui.adapter.GoldAdapter;
 import com.example.baitapquatrinh_bt1.model.GoldResponse;
 import com.example.baitapquatrinh_bt1.R;
@@ -101,14 +102,14 @@ public class HomeFragment extends Fragment {
     // ================= API =================
     private void fetchGoldPrice() {
         loadingLayout.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.vang.today/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService api = retrofit.create(ApiService.class);
-
-        api.getGoldPrices().enqueue(new Callback<GoldResponse>() {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://www.vang.today/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        ApiService api = retrofit.create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+        apiService.getGoldPrices().enqueue(new Callback<GoldResponse>() {
             @Override
             public void onResponse(Call<GoldResponse> call, Response<GoldResponse> response) {
 
